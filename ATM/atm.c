@@ -19,7 +19,7 @@ int main ()
 	{
 		do
 		{
-			int choice = menu();
+			choice = menu();
 			switch (choice)
 			{
 				case 1:
@@ -35,7 +35,6 @@ int main ()
 					printf("%d", choice);
 					break;
 			}
-			printf("choice is right now %d", choice);
 		} while (choice != 4);
 	}
 	atmQuit();
