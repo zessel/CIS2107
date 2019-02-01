@@ -9,9 +9,14 @@ This program simulates an ATM once a specific user beings to authenticate.
 #include <stdio.h>
 #include <stdlib.h>
 
+#define PIN 3014
+
 void inputBars();
+void printReceipt();
 int authenticate();
 int menu();
+int getTransactions();
+void setTransactions();
 int getBalance();
 void setBalance();
 void withdraw();
@@ -19,6 +24,7 @@ void deposit();
 void atmQuit();
 
 unsigned int balance = 5000;    // balance is only accessible within atm.c but to all functions
+unsigned int transactions = 0;     // transactions counts the transactions made in this program instance
 
 int main ()
 {
@@ -34,6 +40,7 @@ int main ()
 			{
 				case 1:
 					printf("Your account balance is currently: $%d\n\n", getBalance());
+					printReceipt();
 					break;
 				case 2:	
 					withdraw();
@@ -57,9 +64,27 @@ void inputBars()
 }
 
 /*
+	printReceipt is just a simple loop to check for valid input and then an if 
+	statement that prints a line of tect and nothign else
+*/
+
+void printReceipt()
+{
+	int receipt;
+	do
+	{
+		printf("%s", "\nWould you like a receipt?\n\n\t1. Yes\n\t2. No\n\nSelection: ");
+		scanf("%d", &receipt);
+		puts("");
+	} while ((receipt > 2) || (receipt < 1));
+	if (receipt == 1)
+		puts("Receipt printing...\n");
+}
+
+
+/*
 	authenticate gives the user 3 chances to enter their PIN number.  If the user fails
 	the bulk of the programs functions will never be called and the program will terminate.
-	For simplicity the users PIN is hardcoded into the function.
 */	
 
 int authenticate()
@@ -72,7 +97,7 @@ int authenticate()
 	printf("%s", "\tPIN:  ");
 	scanf("%d", &pin);
 	inputBars();
-	while (tries < 2 && pin != 3014)
+	while (tries < 2 && pin != PIN)
 	{
 		puts("Sorry, the PIN you entered is incorrect.  Please try again.\n");
 		printf("%s", "\tPIN:  ");
@@ -80,7 +105,7 @@ int authenticate()
 		inputBars();
 		++tries;
 	}
-	if (tries == 2 && pin != 3014)
+	if (tries == 2 && pin != PIN)
 	{
 		puts("You have exceeded the number of PIN attempts on this ATM.");
 		login = 0;
@@ -115,6 +140,24 @@ int menu ()
 }
 
 /*
+	getTransactions just gives you the current value of transactions
+*/
+
+int getTransactions ()
+{
+	return transactions;
+}
+
+/*
+	incrementTransations gets called after a transaction and increases it's count
+*/
+
+void incrementTransations ()
+{
+	transactions += 1;
+}
+
+/*
 	getBalance just sends the global balance variable to whatever calls it.
 */
 
@@ -146,7 +189,7 @@ void withdraw ()
 	int tries = 0;							// counter
 	
 	if (takenToday >= 981)
-		puts("\nYou have already withdrawn your maximum for today");
+		puts("\nYou have already withdrawn your maximum for today\n");
 	else
 	{
 		while((tries < 3) && ((takeOut < 1) || ((takeOut + takenToday) > 1000) || ((takeOut % 20) != 0)))
@@ -161,16 +204,21 @@ void withdraw ()
 			else if ((takeOut + takenToday) > 1000)
 				puts("This will exceed your maximum daily withdrawal of $1000\n");
 			else if ((takeOut % 20) != 0)
-				puts("This machine only serves withdrawals in increments of $20\n");		
+				puts("This machine only serves withdrawals in increments of $20\n");
 		++tries;
 		}
-		if (tries == 3)
+		
+		// tries increments to 3 even if third attempt is valid, requires full check
+		
+		if ((tries == 3) && ((takeOut < 1) || ((takeOut + takenToday) > 1000) || ((takeOut % 20) != 0)))
 		{
 			puts("You have exceeded the number of withdraw attempts.  The ATM will now exit.");
 			atmQuit();
 		}
 		takenToday += takeOut;
 		setBalance(0-takeOut);
+		incrementTransations();
+		printReceipt();
 	}
 }
 
@@ -179,9 +227,11 @@ void withdraw ()
 	input related to those requests.
 	Restrictions are that deposits may be a maximum of $10000 cumulative, must be positive.
 	Checks if any further deposits are possible before jumping into the meat of the function.
+	Takes input as a float and casts it as a int to prevent input errors from coinage.
 */
 void deposit ()
 {
+	float userInput;					// 
 	int putIn = 0;						// user input initialized
 	static unsigned int inToday = 0;	// tracker for the total deposits in this instance eof the program
 	int tries = 0;						// counter
@@ -192,10 +242,12 @@ void deposit ()
 	{
 		while((tries < 3) && ((putIn < 1) || ((putIn + inToday) > 10000)))
 		{
-		puts("Please enter the amount you wish to deposit in (maximum $10090 daily)\n");
+		puts("Please enter the amount you wish to deposit in whole bills (maximum $10000 daily)");
+		puts("WARNING: Any coinage  will be ignored.\n");
 		printf("\tRemaining depositable today : $%d\n", 10000 - inToday);  
 		printf("%s", "\t$");
-		scanf("%d", &putIn);
+		scanf("%f", &userInput);
+		putIn = (int)userInput;
 		inputBars();
 			if (putIn < 1)
 				puts("This is an invalid amount\n");
@@ -203,13 +255,18 @@ void deposit ()
 				puts("This will exceed your maximum daily deposits of $10000\n");		
 		++tries;
 		}
-		if (tries == 3)
+		
+		// tries increments to 3 even if the third attempt at deposit is valid
+		
+		if ((tries == 3) && ((putIn < 1) || ((putIn + inToday) > 10000)))
 		{
 			puts("You have exceeded the number of deposit attempts.  The ATM will now exit.");
 			atmQuit();
 		}
 		inToday += putIn;
 		setBalance(putIn);
+		incrementTransations();
+		printReceipt();
 	}
 }
 
@@ -219,6 +276,7 @@ void deposit ()
 
 void atmQuit()
 {
-	puts("\nThank you for banking with us today\n");
+	printf("\nYou have made %d transactions today\n", getTransactions());
+	puts("\nThank you for banking with us\n");
 	exit(0);
 }
