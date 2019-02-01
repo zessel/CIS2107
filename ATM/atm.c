@@ -4,12 +4,16 @@ Zach Essel
 CIS 2107 002
 Lab 3: ATM
 
-This program simulates an ATM once a specific user beings to authenticate.  
+This program simulates an ATM once a specific user beings to authenticate.
+It has 3 basic functions: Balance, Withdraw, Deposit; and those functions
+have various restrictions.  It maintains a balance, a number of transactions, and
+amounts deposited and withdrawn for each instance of the program. 
 */
 #include <stdio.h>
 #include <stdlib.h>
 
 #define PIN 3014
+#define BALANCE 5000
 
 void inputBars();
 void printReceipt();
@@ -23,7 +27,7 @@ void withdraw();
 void deposit();
 void atmQuit();
 
-unsigned int balance = 5000;    // balance is only accessible within atm.c but to all functions
+unsigned int balance = BALANCE;    // balance is only accessible within atm.c but to all functions
 unsigned int transactions = 0;     // transactions counts the transactions made in this program instance
 
 int main ()
