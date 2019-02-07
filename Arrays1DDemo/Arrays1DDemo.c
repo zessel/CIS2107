@@ -21,7 +21,7 @@ on smaller segments of the overall array
 #include <stdlib.h>
 
 #define ARRAY_SIZE 64	// The size of the array
-#define ARRAY_MIN 0		// Used to calculate the minimum a random number can be for the array
+#define ARRAY_MIN 0	// Used to calculate the minimum a random number can be for the array
 #define ARRAY_MAX 100	// Used to calculate the maximum a random number can be for the array
 
 unsigned int globalArray[ARRAY_SIZE]; 
@@ -152,7 +152,7 @@ void printArrayDefault ()
 }
 
 /*
-	printArrayRange prints out the portion of the array from a given start and end INDEX.
+	printArrayRange prints out the portion of the array from a given start and end index.
 	Prints 8 values to a row.  For testing.
 */
 void printArrayRange (unsigned int start, unsigned int end)
@@ -237,7 +237,7 @@ void reverseInRange (unsigned int start, unsigned int end)
 /*
 	findSequence looks for two consecutive values in the array,
 	if found it returns the index of the first value.  Does not bother to check 
-	the find value of the array when looking for "tom."  If no sequence is found
+	the final value of the array when looking for "tom."  If no sequence is found
 	it returns -1
 */
 unsigned findSequence (unsigned int tom, unsigned int jerry)
