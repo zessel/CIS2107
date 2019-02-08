@@ -13,7 +13,7 @@ Designated range reversal, and
 Sequence searching.
 
 I also added a simple print function available from the main menu, and another ranged print function that is 
-not accessable from the program menu.  Ranged print was designed to help with readability when performing functions
+not accessible from the program menu.  Ranged print was designed to help with readability when performing functions
 on smaller segments of the overall array 
 */
 #include <time.h>
@@ -40,7 +40,7 @@ unsigned findSequence();
 	main has a very basic main menu loop and runs through the first array generation automatically.
 	Some of the index input could be moved to a new function to make main look cleaner but I thought it
 	was okay for the scope of this program to have it a bit messy.  Couldn't find a clear answer on
-	whether leaving the break out of the first case to intentionally run the second is an acceoptable practice
+	whether leaving the break out of the first case to intentionally run the second is an acceptable practice
 	but I like it here.
 */
 void main()
