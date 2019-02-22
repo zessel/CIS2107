@@ -11,13 +11,13 @@ movement for the turtle
 a formatter for the "race track" string
 a winner output check
 
-I have the length of the race a a defined variable so you can change it from the painfully slow default of 70.
+I have the length of the race as a defined constant so you can change it from the painfully slow default of 70.
 
 The main contains the initializations and the loop of the functions
 
 I decided to update a single string repeatedly for the main output.  I think creating and concatting multiple strings would be a bigger
 hit on memory then rewriting the one string.  For the "erasing" I could have written a loop similar to the initialization of the string, 
-but my assumption is memset does exactly that and it's neater.  
+but my assumption is memset does exactly that and it looks cleaner.  
 
 */
 
@@ -58,7 +58,7 @@ void main ()
 	puts("BANG               !!!!");
 	puts("AND THEY'RE OFF    !!!!");
 	
-	while (harePos != 70 && turtPos != 70)
+	while (harePos != RACE_LENGTH && turtPos != RACE_LENGTH)
 	{
 		harePos = moveHare(harePos);
 		turtPos = moveTurtle(turtPos);
@@ -113,8 +113,8 @@ int moveHare (int harePos)
 			harePos -= 2;
 	}
 	
-	if (harePos > 70)
-		harePos = 70;
+	if (harePos > RACE_LENGTH)
+		harePos = RACE_LENGTH;
 	else if (harePos < 1)
 		harePos = 1;
 	return harePos;
@@ -147,8 +147,8 @@ int moveTurtle (int turtPos)
 			turtPos += 1;
 	}
 	
-	if (turtPos > 70)
-		turtPos = 70;
+	if (turtPos > RACE_LENGTH)
+		turtPos = RACE_LENGTH;
 	else if (turtPos < 1)
 		turtPos = 1;
 	return turtPos;
@@ -187,8 +187,8 @@ void updateRaceString (char *track_ptr, int harePos, int turtPos)
 
 void winCheck (int harePos, int turtPos)
 {
-	if (turtPos == 70)
+	if (turtPos == RACE_LENGTH)
 		puts("TORTOISE WINS!!! YAY!!!\n");
-	else if (harePos == 70)
+	else if (harePos == RACE_LENGTH)
 		puts("Hare wins. Yuch.\n");
 }
